@@ -47,6 +47,16 @@ class Goose(Actor):
                 self += goose
                 break
 
+    def steal(self):
+        player = self.player_source.random_one()
+        if player.balance <= 1:
+            return
+
+        amount = random.randint(1, int(int(player.balance) / 2))
+
+        player.balance -= amount
+        self.balance += amount
+
     def __iadd__(self, other: Self):
         if self.group and other.group:
             if self.group == other.group:

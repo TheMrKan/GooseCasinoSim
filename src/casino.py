@@ -32,6 +32,7 @@ class Casino:
 
         self.__events = [
             CasinoEvent(10, self.__event_global_play),
+            CasinoEvent(7, self.__event_goose_steal),
             CasinoEvent(5, self.__event_goose_run),
             CasinoEvent(4, self.__event_goose_ability)
         ]
@@ -86,3 +87,7 @@ class Casino:
     def __event_goose_ability(self):
         goose = self.gooses.random_one()
         goose.use_ability()
+
+    def __event_goose_steal(self):
+        goose = self.gooses.random_one()
+        goose.steal()
