@@ -1,20 +1,31 @@
 from src.entities.chips import Chips
 from src.dict_collections import BalanceCollection
 
+from typing import TYPE_CHECKING, Optional
+if TYPE_CHECKING:
+    from src.list_collections import PlayerCollection, GooseCollection
+
 
 class Actor:
 
     actor_id: str
-    __balance_source: BalanceCollection
+    balance_source: BalanceCollection | None
+    player_source: Optional["PlayerCollection"]
+    goose_source: Optional["GooseCollection"]
 
-    def __init__(self, actor_id: str, balance_source: BalanceCollection):
+    def __init__(self, actor_id: str):
         self.actor_id = actor_id
-        self.__balance_source = balance_source
 
     @property
     def balance(self) -> Chips:
-        return self.__balance_source[self.actor_id]
+        if not self.balance_source:
+            raise RuntimeError("Balance source is not configured")
+
+        return self.balance_source[self.actor_id]
 
     @balance.setter
     def balance(self, value: Chips):
-        self.__balance_source[self.actor_id] = value
+        if not self.balance_source:
+            raise RuntimeError("Balance source is not configured")
+
+        self.balance_source[self.actor_id] = value

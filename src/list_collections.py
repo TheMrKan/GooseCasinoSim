@@ -14,6 +14,9 @@ class GenericActorCollection[T]:
     def __init__(self, iterable: Iterable[T] | None = None):
         self.__list = list(iterable or [])
 
+    def add(self, actor: T):
+        self.__list.append(actor)
+
     def __getitem__(self, item: int | slice) -> T:
         return self.__list[item]
 

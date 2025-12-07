@@ -1,33 +1,38 @@
 from typing import Self
+from dataclasses import dataclass
+from functools import total_ordering
 
 
 class NotEnoughChipsError(Exception):
     pass
 
 
+@total_ordering
+@dataclass(frozen=True)
 class Chips:
     amount: int
 
-    def __init__(self, amount):
-        if amount < 0:
+    def __post_init__(self):
+        if self.amount < 0:
             raise NotEnoughChipsError
-
-        self.amount = amount
 
     @classmethod
     def __amount(cls, obj: Self | int) -> int:
         if isinstance(obj, Chips):
-            return cls.amount
+            return obj.amount
         return obj
 
     def __add__(self, other: Self | int):
         return Chips(self.amount + self.__amount(other))
 
-    def __iadd__(self, other: Self | int):
-        return Chips(self.amount + self.__amount(other))
-
     def __sub__(self, other: Self | int):
         return Chips(self.amount - self.__amount(other))
 
-    def __isub__(self, other: Self | int):
-        return Chips(self.amount - self.__amount(other))
+    def __eq__(self, other: Self | int) -> bool:
+        return self.amount == self.__amount(other)
+
+    def __lt__(self, other: Self | int) -> bool:
+        return self.amount < self.__amount(other)
+
+    def __int__(self):
+        return self.amount

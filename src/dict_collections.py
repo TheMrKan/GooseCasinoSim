@@ -4,15 +4,10 @@ from src.entities.chips import Chips
 class BalanceCollection:
     __balances: dict[str, Chips]
 
-    default_balance: Chips
-
-    def __init__(self, default_balance: Chips):
+    def __init__(self):
         self.__balances = {}
-        self.default_balance = default_balance
 
     def __getitem__(self, item: str):
-        if item not in self:
-            return self.default_balance
         return self.__balances[item]
 
     def __setitem__(self, key: str, value: Chips):
