@@ -1,5 +1,5 @@
 [project]
-name = "CustomCollectionSim"
+name = "GooseCasinoSim"
 version = "0.1.0"
 description = "Simulation with user-defined collections and pseudo-random model"
 requires-python = ">=3.12"
