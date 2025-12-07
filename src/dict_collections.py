@@ -1,4 +1,9 @@
+import logging
+
 from src.entities.chips import Chips
+
+
+logger = logging.getLogger("BalanceCollection")
 
 
 class BalanceCollection:
@@ -11,7 +16,9 @@ class BalanceCollection:
         return self.__balances[item]
 
     def __setitem__(self, key: str, value: Chips):
+        old_value = self.__balances.get(key, 0)
         self.__balances[key] = value
+        logger.debug("Balance %s: %s -> %s", key, old_value, value)
 
     def __contains__(self, item: str):
         return item in self.__balances.keys()

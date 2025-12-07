@@ -1,7 +1,9 @@
+import logging
+from typing import TYPE_CHECKING, Optional
+
 from src.entities.chips import Chips
 from src.dict_collections import BalanceCollection
 
-from typing import TYPE_CHECKING, Optional
 if TYPE_CHECKING:
     from src.list_collections import PlayerCollection, GooseCollection
 
@@ -12,9 +14,12 @@ class Actor:
     balance_source: BalanceCollection | None
     player_source: Optional["PlayerCollection"]
     goose_source: Optional["GooseCollection"]
+    _logger: logging.Logger
 
     def __init__(self, actor_id: str):
         self.actor_id = actor_id
+
+        self._logger = logging.getLogger(self.__class__.__name__)
 
     @property
     def balance(self) -> Chips:

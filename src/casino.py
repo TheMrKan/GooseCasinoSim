@@ -1,6 +1,7 @@
 from typing import Callable
 from dataclasses import dataclass
 import random
+import logging
 
 from src.list_collections import PlayerCollection, GooseCollection
 from src.dict_collections import BalanceCollection
@@ -8,6 +9,8 @@ from src.entities.actor import Actor
 from src.entities.goose import Goose
 from src.entities.player import Player
 from src.entities.chips import Chips
+
+logger = logging.getLogger(__name__)
 
 
 @dataclass
@@ -41,12 +44,12 @@ class Casino:
         self.__sim_step = 0
 
     def print_state(self):
-        print(f"########  CASINO STATE (STEP: {self.__sim_step})  #########")
-        print()
-        print(f"PLAYERS: {self.players}")
-        print(f"GOOSES: {self.gooses}")
-        print()
-        print("###########################################")
+        logger.info(f"########  CASINO STATE (STEP: {self.__sim_step})  #########")
+        logger.info("")
+        logger.info(f"PLAYERS: {self.players}")
+        logger.info(f"GOOSES: {self.gooses}")
+        logger.info("")
+        logger.info("###########################################")
 
     def register_actor(self, actor: Actor, balance: Chips):
         if isinstance(actor, Player):
@@ -61,6 +64,8 @@ class Casino:
         actor.player_source = self.players
 
         self.balances[actor.actor_id] = balance
+
+        logger.debug(f"Registered actor {actor} with balance {balance}")
 
     def simulation_step(self):
         self.__sim_step += 1
@@ -77,17 +82,21 @@ class Casino:
         raise RuntimeError(f"Failed to select random event. Value left: {value}")
 
     def __event_global_play(self):
+        logger.info("EVENT: GLOBAL PLAY")
         for player in tuple(self.players):
             player.play()
 
     def __event_goose_run(self):
+        logger.info("EVENT: GLOBAL GOOSE RUN")
         for goose in self.gooses:
             goose.random_run()
 
     def __event_goose_ability(self):
+        logger.info("EVENT: RANDOM GOOSE USE THE ABILITY")
         goose = self.gooses.random_one()
         goose.use_ability()
 
     def __event_goose_steal(self):
+        logger.info("EVENT: RANDOM GOOSE STEAL FROM A RANDOM PLAYER")
         goose = self.gooses.random_one()
         goose.steal()

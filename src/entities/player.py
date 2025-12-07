@@ -22,8 +22,10 @@ class Player(Actor):
 
         chance = 0.5 - self.panic / 100
         if random.random() < chance:
+            self._logger.debug("Player %s has won %s!", self.actor_id, amount)
             self.balance += amount
         else:
+            self._logger.debug("Player %s has lost %s (((", self.actor_id, amount)
             self.balance -= amount
 
         if int(self.balance) <= 0:
@@ -31,7 +33,9 @@ class Player(Actor):
 
     def damage(self, amount):
         self.health -= amount
+        self._logger.debug("Player %s damaged %s! (new HP: %s)", self.actor_id, amount, self.health)
         if self.health <= 0:
+            self._logger.info("Player %s is dead now", self.actor_id)
             if not self.player_source:
                 raise RuntimeError("Failed to kill a player: player source is not specified")
             self.player_source.remove(self)

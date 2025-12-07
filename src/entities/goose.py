@@ -53,7 +53,7 @@ class Goose(Actor):
             return
 
         amount = random.randint(1, int(int(player.balance) / 2))
-
+        self._logger.debug("Goose %s has stolen %s from %s", self.actor_id, amount, player.actor_id)
         player.balance -= amount
         self.balance += amount
 
@@ -129,6 +129,7 @@ class WarGoose(Goose):
             raise RuntimeError("No player source specified")
 
         player = self.player_source.random_one()
+        self._logger.debug(f"Damaging player {player.actor_id}")
         player.damage(self.damage)
 
 
@@ -145,3 +146,4 @@ class HonkGoose(Goose):
 
         player = self.player_source.random_one()
         player.panic += self.honk_volume
+        self._logger.debug(f"Honking on player {player.actor_id}. New panic: {player.panic}")

@@ -1,8 +1,16 @@
-import traceback
+import sys
+import logging
 
-from src.casino import Casino
-from src.factories import generate_players, generate_gooses
-from src.exceptions import SimulationException
+logging.basicConfig(
+    level=logging.DEBUG,
+    format='[%(name)s] %(message)s',
+    stream=sys.stdout,
+)
+logger = logging.getLogger(__name__)
+
+from src.casino import Casino    # noqa: E402
+from src.factories import generate_players, generate_gooses    # noqa: E402
+from src.exceptions import SimulationException     # noqa: E402
 
 
 def main() -> None:
@@ -26,19 +34,18 @@ def main() -> None:
             casino.simulation_step()
             casino.print_state()
     except SimulationException as e:
-        print()
-        print()
-        print()
-        print("__________ THE END __________")
-        print()
-        print("The simulation has ended with result:")
-        print(str(e))
-        print()
+        logger.info("")
+        logger.info("")
+        logger.info("")
+        logger.info("__________ THE END __________")
+        logger.info("")
+        logger.info("The simulation has ended with result:")
+        logger.info(str(e))
+        logger.info("")
         casino.print_state()
     except Exception as e:
-        print("__________ ERROR __________")
-        print("Looks like an error has occured:")
-        traceback.print_exception(type(e), e)
+        logger.info("__________ ERROR __________")
+        logger.exception("Looks like an error has occured", exc_info=e)
 
 
 if __name__ == "__main__":
