@@ -5,10 +5,12 @@ from src.entities.actor import Actor
 
 class Goose(Actor):
     name: str
+    honk_volume: int
 
-    def __init__(self, actor_id: int, name: str):
+    def __init__(self, actor_id: str, name: str, honk_volume: int):
         super().__init__(actor_id)
         self.name = name
+        self.honk_volume = honk_volume
 
 
 class IHasAbility(ABC):
@@ -25,11 +27,6 @@ class WarGoose(Goose, IHasAbility):
 
 
 class HonkGoose(Goose, IHasAbility):
-    honk_volume: int
-
-    def __init__(self, actor_id: int, name: str, honk_volume: int):
-        super().__init__(actor_id, name)
-        self.honk_volume = honk_volume
 
     def use_ability(self):
         pass

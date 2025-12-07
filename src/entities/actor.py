@@ -3,9 +3,9 @@ from src.entities.chips import Chips
 
 class Actor:
 
-    actor_id: int
+    actor_id: str
 
-    def __init__(self, actor_id: int):
+    def __init__(self, actor_id: str):
         self.actor_id = actor_id
 
     @property
