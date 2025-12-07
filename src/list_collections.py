@@ -1,4 +1,5 @@
 from typing import Iterable, TypeVar
+import random
 
 from src.entities.actor import Actor
 from src.entities.goose import Goose
@@ -16,6 +17,16 @@ class GenericActorCollection[T]:
 
     def add(self, actor: T):
         self.__list.append(actor)
+
+    def remove(self, actor: T):
+        self.__list.remove(actor)
+
+    def random(self):
+        if not self:
+            raise ValueError("The collection is empty")
+
+        index = random.randint(0, len(self) - 1)
+        return self[index]
 
     def __getitem__(self, item: int | slice) -> T:
         return self.__list[item]

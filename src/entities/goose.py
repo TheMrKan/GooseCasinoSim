@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, Self, Iterable
 
 from src.entities.actor import Actor
 
@@ -36,6 +36,12 @@ class Goose(Actor):
     def _ability(self):
         pass
 
+    def __iadd__(self, other: Self) -> Self:
+        if self.group and other.group:
+            self.group += other.group
+
+        return self
+
 
 class GooseGroup:
     __gooses: set[Goose]
@@ -49,6 +55,10 @@ class GooseGroup:
     def remove(self, goose: Goose):
         self.__gooses.remove(goose)
 
+    def join(self, other: Self):
+        for goose in other.__gooses:
+            goose.group = self
+
     def __iter__(self):
         return iter(self.__gooses)
 
@@ -58,11 +68,30 @@ class GooseGroup:
     def __len__(self) -> int:
         return len(self.__gooses)
 
+    def __iadd__(self, other: Self | Goose):
+        if isinstance(other, self.__class__):
+            self.join(other)
+            return
+
+        self.add(other)
+
+    def __isub__(self, other: Goose):
+        self.remove(other)
+
 
 class WarGoose(Goose):
+    damage: int
+
+    def __init__(self, actor_id: str, name: str, damage: int):
+        super().__init__(actor_id, name)
+        self.damage = damage
 
     def _ability(self):
-        pass
+        if not self.player_source:
+            raise RuntimeError("No player source specified")
+
+        player = self.player_source.random()
+        player.damage(self.damage)
 
 
 class HonkGoose(Goose):
@@ -73,4 +102,8 @@ class HonkGoose(Goose):
         self.honk_volume = honk_volume
 
     def _ability(self):
-        pass
+        if not self.player_source:
+            raise RuntimeError("No player source specified")
+
+        player = self.player_source.random()
+        player.panic += self.honk_volume
