@@ -39,3 +39,6 @@ class Chips:
 
     def __int__(self):
         return self.amount
+
+    def __repr__(self):
+        return str(self.amount)

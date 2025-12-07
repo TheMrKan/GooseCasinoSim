@@ -31,7 +31,7 @@ class Actor:
         self.balance_source[self.actor_id] = value
 
     def __str__(self):
-        return f"<{self.__class__.__name__}({self.actor_id}): {self.balance} C>"
+        return f"<{self.__class__.__name__}({self.actor_id}): {self.balance}>"
 
     def __repr__(self):
         return str(self)

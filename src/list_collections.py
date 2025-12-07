@@ -55,7 +55,7 @@ class GooseCollection(GenericActorCollection[Goose]):
 
             if goose.group:
                 gp = list(goose.group)
-                checked_gooses.union(gp)
+                checked_gooses.update(gp)
             else:
                 gp = [goose]
 

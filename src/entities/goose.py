@@ -23,9 +23,9 @@ class Goose(Actor):
         if self.__group == value:
             return
 
-        if self.__group:
+        if self.__group is not None:
             self.__group.remove(self)
-        if value:
+        if value is not None:
             value.add(self)
         self.__group = value
 
@@ -41,6 +41,8 @@ class Goose(Actor):
 
     def random_run(self):
         for goose in self.goose_source:
+            if goose == self:
+                continue
             if random.random() < self.run_crush_chance:
                 self += goose
                 break
@@ -79,7 +81,7 @@ class GooseGroup:
         if other == self:
             return
 
-        for goose in other.__gooses:
+        for goose in tuple(other.__gooses):
             goose.group = self
 
     def __iter__(self):
@@ -100,6 +102,9 @@ class GooseGroup:
 
     def __isub__(self, other: Goose):
         self.remove(other)
+
+    def __repr__(self):
+        return repr(self.__gooses)
 
 
 class WarGoose(Goose):

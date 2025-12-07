@@ -40,26 +40,26 @@ class Casino:
         self.__sim_step = 0
 
     def print_state(self):
-        print(f"########  CASINO STATE (STEP: {self.__sim_step})  #########)")
+        print(f"########  CASINO STATE (STEP: {self.__sim_step})  #########")
         print()
         print(f"PLAYERS: {self.players}")
         print(f"GOOSES: {self.gooses}")
         print()
-        print("####################################################")
+        print("###########################################")
 
     def register_actor(self, actor: Actor, balance: Chips):
         if isinstance(actor, Player):
             self.players.add(actor)
         elif isinstance(actor, Goose):
             self.gooses.add(actor)
+        else:
+            raise ValueError(f"Unsupported actor type: {type(actor)}")
 
         actor.balance_source = self.balances
         actor.goose_source = self.gooses
         actor.player_source = self.players
 
         self.balances[actor.actor_id] = balance
-
-        raise ValueError(f"Unsupported actor type: {type(actor)}")
 
     def simulation_step(self):
         self.__sim_step += 1
@@ -76,7 +76,7 @@ class Casino:
         raise RuntimeError(f"Failed to select random event. Value left: {value}")
 
     def __event_global_play(self):
-        for player in self.players:
+        for player in tuple(self.players):
             player.play()
 
     def __event_goose_run(self):
