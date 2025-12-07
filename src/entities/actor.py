@@ -29,3 +29,12 @@ class Actor:
             raise RuntimeError("Balance source is not configured")
 
         self.balance_source[self.actor_id] = value
+
+    def __str__(self):
+        return f"<{self.__class__.__name__}({self.actor_id}): {self.balance} C>"
+
+    def __repr__(self):
+        return str(self)
+
+    def __hash__(self):
+        return hash(self.actor_id)

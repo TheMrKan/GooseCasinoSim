@@ -45,7 +45,25 @@ class GenericActorCollection[T]:
 
 
 class GooseCollection(GenericActorCollection[Goose]):
-    pass
+
+    def __str__(self):
+        checked_gooses = set()
+        groups = []
+        for goose in self:
+            if goose in checked_gooses:
+                continue
+
+            if goose.group:
+                gp = list(goose.group)
+                checked_gooses.union(gp)
+            else:
+                gp = [goose]
+
+            groups.append(gp)
+
+        groups.sort(key=len)
+        sep = ', '
+        return f"[{sep.join(f'{{{sep.join(str(g) for g in group)}}}' for group in groups)}]"
 
 
 class PlayerCollection(GenericActorCollection[Player]):

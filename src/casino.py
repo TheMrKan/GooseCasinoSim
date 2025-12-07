@@ -23,6 +23,7 @@ class Casino:
 
     __events: list[CasinoEvent]
     __events_weight_sum: int
+    __sim_step: int
 
     def __init__(self):
         self.players = PlayerCollection()
@@ -36,6 +37,15 @@ class Casino:
         ]
         self.__events.sort(key=lambda x: x.weight, reverse=True)
         self.__events_weight_sum = sum((e.weight for e in self.__events))
+        self.__sim_step = 0
+
+    def print_state(self):
+        print(f"########  CASINO STATE (STEP: {self.__sim_step})  #########)")
+        print()
+        print(f"PLAYERS: {self.players}")
+        print(f"GOOSES: {self.gooses}")
+        print()
+        print("####################################################")
 
     def register_actor(self, actor: Actor, balance: Chips):
         if isinstance(actor, Player):
@@ -52,6 +62,7 @@ class Casino:
         raise ValueError(f"Unsupported actor type: {type(actor)}")
 
     def simulation_step(self):
+        self.__sim_step += 1
         event = self.__select_random_event()
         event.action()
 
