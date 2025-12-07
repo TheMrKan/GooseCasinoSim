@@ -1,27 +1,44 @@
+import traceback
+
 from src.casino import Casino
-from src.entities.goose import Goose, WarGoose, HonkGoose
-from src.entities.player import Player
-from src.entities.chips import Chips
+from src.factories import generate_players, generate_gooses
+from src.exceptions import SimulationException
 
 
 def main() -> None:
     casino = Casino()
 
-    casino.register_actor(Player("P_0"), Chips(100))
-    casino.register_actor(Player("P_1"), Chips(50))
-    casino.register_actor(Player("P_2"), Chips(10))
-
-    casino.register_actor(Goose("G_0", "Goose 0", 0.3), Chips(0))
-    casino.register_actor(Goose("G_1", "Goose 1", 0.3), Chips(0))
-    casino.register_actor(Goose("G_2", "Goose 2", 0.3), Chips(0))
-
-    casino.register_actor(HonkGoose("G_3", "Goose 3", 0.3, 30), Chips(0))
-    casino.register_actor(WarGoose("G_4", "Goose 4", 0.3, 50), Chips(0))
+    generate_players(casino, 5, 10, 100)
+    generate_gooses(
+        casino,
+        10,
+        (0, 20),
+        0.5,
+        0.5,
+        (30, 100),
+        (50, 100),
+        0.3
+    )
 
     casino.print_state()
-    for _ in range(5):
-        casino.simulation_step()
+    try:
+        for _ in range(15):
+            casino.simulation_step()
+            casino.print_state()
+    except SimulationException as e:
+        print()
+        print()
+        print()
+        print("__________ THE END __________")
+        print()
+        print("The simulation has ended with result:")
+        print(str(e))
+        print()
         casino.print_state()
+    except Exception as e:
+        print("__________ ERROR __________")
+        print("Looks like an error has occured:")
+        traceback.print_exception(type(e), e)
 
 
 if __name__ == "__main__":

@@ -4,6 +4,7 @@ import random
 from src.entities.actor import Actor
 from src.entities.goose import Goose
 from src.entities.player import Player
+from src.exceptions import SimulationException
 
 
 T = TypeVar('T', bound=Actor)
@@ -61,10 +62,14 @@ class GooseCollection(GenericActorCollection[Goose]):
 
             groups.append(gp)
 
-        groups.sort(key=len)
+        groups.sort(key=len, reverse=True)
         sep = ', '
         return f"[{sep.join(f'{{{sep.join(str(g) for g in group)}}}' for group in groups)}]"
 
 
 class PlayerCollection(GenericActorCollection[Player]):
-    pass
+
+    def remove(self, player: Player):
+        super().remove(player)
+        if not self:
+            raise SimulationException("Ooops... Looks like no players left... Goose world won!")

@@ -14,8 +14,11 @@ class Player(Actor):
         self.health = 100
 
     def play(self):
-        amount = random.randint(1, int(self.balance))
-        amount = min(int(amount * (1 + self.panic / 100)), int(self.balance))
+        if self.balance < 10 or self.panic >= 100:
+            amount = int(self.balance)
+        else:
+            amount = random.randint(int(int(self.balance) / 2), int(self.balance))
+            amount = min(int(amount * (1 + self.panic / 100)), int(self.balance))
 
         chance = 0.5 - self.panic / 100
         if random.random() < chance:
