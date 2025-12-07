@@ -24,15 +24,10 @@ class Chips:
         return Chips(self.amount + self.__amount(other))
 
     def __iadd__(self, other: Self | int):
-        self.amount += self.__amount(other)
-        return self
+        return Chips(self.amount + self.__amount(other))
 
     def __sub__(self, other: Self | int):
         return Chips(self.amount - self.__amount(other))
 
     def __isub__(self, other: Self | int):
-        if self.amount < self.__amount(other):
-            raise NotEnoughChipsError
-
-        self.amount -= self.__amount(other)
-        return self
+        return Chips(self.amount - self.__amount(other))
