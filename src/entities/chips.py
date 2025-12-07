@@ -28,7 +28,10 @@ class Chips:
     def __sub__(self, other: Self | int):
         return Chips(self.amount - self.__amount(other))
 
-    def __eq__(self, other: Self | int) -> bool:
+    def __eq__(self, other) -> bool:
+        if not isinstance(other, (Chips, int)):
+            raise NotImplementedError
+
         return self.amount == self.__amount(other)
 
     def __lt__(self, other: Self | int) -> bool:

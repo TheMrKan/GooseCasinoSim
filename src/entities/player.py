@@ -15,11 +15,16 @@ class Player(Actor):
 
     def play(self):
         amount = random.randint(1, int(self.balance))
+        amount = min(int(amount * (1 + self.panic / 100)), int(self.balance))
+
         chance = 0.5 - self.panic / 100
         if random.random() < chance:
             self.balance += amount
         else:
             self.balance -= amount
+
+        if int(self.balance) <= 0:
+            self.damage(self.health)
 
     def damage(self, amount):
         self.health -= amount

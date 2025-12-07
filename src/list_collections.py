@@ -21,14 +21,14 @@ class GenericActorCollection[T]:
     def remove(self, actor: T):
         self.__list.remove(actor)
 
-    def random(self):
+    def random_one(self):
         if not self:
             raise ValueError("The collection is empty")
 
         index = random.randint(0, len(self) - 1)
         return self[index]
 
-    def __getitem__(self, item: int | slice) -> T:
+    def __getitem__(self, item: int | slice) -> T | list[T]:
         return self.__list[item]
 
     def __iter__(self):

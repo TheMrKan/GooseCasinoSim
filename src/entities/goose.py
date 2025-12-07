@@ -1,18 +1,21 @@
-from typing import Optional, Self, Iterable
+from typing import Optional, Self
+import random
 
 from src.entities.actor import Actor
 
 
 class Goose(Actor):
     name: str
+    run_crush_chance: float
     __group: Optional["GooseGroup"] = None
 
-    def __init__(self, actor_id: str, name: str):
+    def __init__(self, actor_id: str, name: str, run_crush_chance: float):
         super().__init__(actor_id)
         self.name = name
+        self.run_crush_chance = run_crush_chance
 
     @property
-    def group(self) -> "GooseGroup":
+    def group(self) -> Optional["GooseGroup"]:
         return self.__group
 
     @group.setter
@@ -36,11 +39,28 @@ class Goose(Actor):
     def _ability(self):
         pass
 
-    def __iadd__(self, other: Self) -> Self:
-        if self.group and other.group:
-            self.group += other.group
+    def random_run(self):
+        for goose in self.goose_source:
+            if random.random() < self.run_crush_chance:
+                self += goose
+                break
 
-        return self
+    def __iadd__(self, other: Self):
+        if self.group and other.group:
+            if self.group == other.group:
+                self.group = None
+            else:
+                self.group += other.group
+
+        elif self.group and not other.group:
+            other.group = self.group
+
+        elif not self.group and other.group:
+            self.group = other.group
+
+        else:
+            self.group = GooseGroup()
+            other.group = self.group
 
 
 class GooseGroup:
@@ -56,6 +76,9 @@ class GooseGroup:
         self.__gooses.remove(goose)
 
     def join(self, other: Self):
+        if other == self:
+            return
+
         for goose in other.__gooses:
             goose.group = self
 
@@ -69,7 +92,7 @@ class GooseGroup:
         return len(self.__gooses)
 
     def __iadd__(self, other: Self | Goose):
-        if isinstance(other, self.__class__):
+        if isinstance(other, GooseGroup):
             self.join(other)
             return
 
@@ -82,28 +105,28 @@ class GooseGroup:
 class WarGoose(Goose):
     damage: int
 
-    def __init__(self, actor_id: str, name: str, damage: int):
-        super().__init__(actor_id, name)
+    def __init__(self, actor_id: str, name: str, run_crush_chance: float, damage: int):
+        super().__init__(actor_id, name, run_crush_chance)
         self.damage = damage
 
     def _ability(self):
         if not self.player_source:
             raise RuntimeError("No player source specified")
 
-        player = self.player_source.random()
+        player = self.player_source.random_one()
         player.damage(self.damage)
 
 
 class HonkGoose(Goose):
     honk_volume: int
 
-    def __init__(self, actor_id: str, name: str, honk_volume: int):
-        super().__init__(actor_id, name)
+    def __init__(self, actor_id: str, name: str, run_crush_chance: float, honk_volume: int):
+        super().__init__(actor_id, name, run_crush_chance)
         self.honk_volume = honk_volume
 
     def _ability(self):
         if not self.player_source:
             raise RuntimeError("No player source specified")
 
-        player = self.player_source.random()
+        player = self.player_source.random_one()
         player.panic += self.honk_volume
