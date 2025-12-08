@@ -1,5 +1,6 @@
 import sys
 import logging
+import random
 
 logging.basicConfig(
     level=logging.DEBUG,
@@ -14,6 +15,11 @@ from src.exceptions import SimulationException     # noqa: E402
 
 
 def main() -> None:
+    seed = None
+
+    if seed is not None:
+        random.seed(seed)
+
     casino = Casino()
 
     generate_players(casino, 5, 10, 100)
