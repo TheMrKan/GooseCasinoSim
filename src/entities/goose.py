@@ -33,8 +33,8 @@ class Goose(Actor):
         if propagate and self.group:
             for goose in self.group:
                 goose.use_ability(propagate=False)
-
-        self._ability()
+        else:
+            self._ability()
 
     def _ability(self):
         pass
@@ -74,6 +74,8 @@ class Goose(Actor):
             self.group = GooseGroup()
             other.group = self.group
 
+        return self
+
 
 class GooseGroup:
     __gooses: set[Goose]
@@ -106,12 +108,14 @@ class GooseGroup:
     def __iadd__(self, other: Self | Goose):
         if isinstance(other, GooseGroup):
             self.join(other)
-            return
+            return self
 
         self.add(other)
+        return self
 
     def __isub__(self, other: Goose):
         self.remove(other)
+        return self
 
     def __repr__(self):
         return repr(self.__gooses)

@@ -23,14 +23,14 @@ class Actor:
 
     @property
     def balance(self) -> Chips:
-        if not self.balance_source:
+        if self.balance_source is None:
             raise RuntimeError("Balance source is not configured")
 
         return self.balance_source[self.actor_id]
 
     @balance.setter
     def balance(self, value: Chips):
-        if not self.balance_source:
+        if self.balance_source is None:
             raise RuntimeError("Balance source is not configured")
 
         self.balance_source[self.actor_id] = value
